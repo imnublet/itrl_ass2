@@ -1,27 +1,28 @@
 import random
 import numpy as np
+import ShortCutEnvironment as env
+
 
 class QLearningAgent(object):
 
-    def __init__(self, n_actions, n_states, epsilon, alpha=0.1):
+    def __init__(self, n_actions, actions, n_states, epsilon=0.25, alpha=0.1):
         self.alpha = alpha
         self.n_actions = n_actions
+        self.actions = actions
         self.n_states = n_states
         self.epsilon = epsilon
         self.q_table = np.zeros(shape=(self.n_states, self.n_actions))
-        # TO DO: Add own code
-        pass
-        
+
     def select_action(self, state):
         if np.random.random() < self.epsilon:
-                        a = np.random.choice(self.actions, size = 1)[0]
+            a = np.random.choice(self.actions, size=1)[0]
         else:
-            a = np.argmax(self.q_table[state,:])
+            a = np.argmax(self.q_table[state])
         return a
         
-    def update(self, state, action, reward):
-        self.q_table[state,action] = self.q_table[state,action] + self.alpha * (reward + np.max(self.q_table[state+1,:]) - self.q_table[state,action)
-        
+    def update(self, state, next_state, action, reward):
+        self.q_table[state, action] = self.q_table[state, action] + self.alpha * (reward + np.max(self.q_table[next_state, :]) - self.q_table[state, action])
+
 
 class SARSAAgent(object):
 
@@ -40,6 +41,7 @@ class SARSAAgent(object):
     def update(self, state, action, reward):
         # TO DO: Add own code
         pass
+
 
 class ExpectedSARSAAgent(object):
 
