@@ -4,11 +4,18 @@ from ShortCutAgents import *
 import numpy as np
 from Helper import *
 # TODO: Q_table visualiseren voor de environment
-# TODO:
+# TODO: Meerdere alpha values in een plot krijgen
 
 
 def run_episodes(agent_type='q_learning', n_episodes=30, n_reps=50, alpha=0.1, epsilon=0.1):
     """
+    Perform an experiment using a given RL algorithm for n_episodes for n_reps
+
+    :param agent_type:
+    :param n_episodes:
+    :param n_reps:
+    :param alpha:
+    :param epsilon:
     """
     env, n_actions, n_states, actions = load_env()
 
@@ -20,7 +27,16 @@ def run_episodes(agent_type='q_learning', n_episodes=30, n_reps=50, alpha=0.1, e
 
 def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
+    Perform Q-Learning on the environment until env.done()
 
+    :param env:
+    :param n_actions:
+    :param n_states:
+    :param actions:
+    :param n_episodes:
+    :param n_reps:
+    :param epsilon:
+    :param alpha:
     """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
@@ -36,11 +52,6 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
                 new_state = env.state()
                 agent.update(state, new_state, action, reward)
             reward_per_episode = np.append(reward_per_episode, total_reward)
-            # print('total_reward', total_reward)
-            # # print(reward_per_episode[episode])
-            # # print(np.shape(reward_per_episode))
-            # print('ep', episode)
-            # print('r_per_e', reward_per_episode)
             env.reset()
         all_cumulative_rewards = np.vstack((all_cumulative_rewards, reward_per_episode))
     return np.mean(all_cumulative_rewards, axis=0)
@@ -48,8 +59,17 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
 
 def sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
+     Perform SARSA on the environment until env.done()
 
-    """
+     :param env:
+     :param n_actions:
+     :param n_states:
+     :param actions:
+     :param n_episodes:
+     :param n_reps:
+     :param epsilon:
+     :param alpha:
+     """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
         reward_per_episode = np.empty(0)
@@ -72,7 +92,12 @@ def sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
 
 def load_env():
     """
+    Load an environment
 
+    :returns loaded_env:
+    :returns n_actions:
+    :returns n_states:
+    :returns actions:
     """
     loaded_env = ShortcutEnvironment()
     n_actions = loaded_env.action_size()
@@ -83,6 +108,12 @@ def load_env():
 
 
 def make_plot(x, y):
+    """
+    Make a plot
+
+    :param x:
+    :param y:
+    """
     qlearning_plot = ComparisonPlot(title="Learning rate of Q-Learning algorithm")
     qlearning_plot.add_curve(x, y)
     qlearning_plot.save('q_learning plot.png')
@@ -98,5 +129,6 @@ def run_experiments():
     print(all_cumulative_rewards)
     make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
     # run_episodes(agent_type='sarsa')
+
 
 run_experiments()
