@@ -43,6 +43,7 @@ class SARSAAgent(object):
 
     def update(self, state, next_state, action, next_action, reward):
         self.q_table[state, action] = self.q_table[state, action] + self.alpha * (reward + self.q_table[next_state, next_action] - self.q_table[state, action])
+        # print(self.q_table)
 
 
 class ExpectedSARSAAgent(object):
