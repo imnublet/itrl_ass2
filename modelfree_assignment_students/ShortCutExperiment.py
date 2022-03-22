@@ -39,6 +39,7 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
     :param alpha:
     """
     all_cumulative_rewards = np.empty(shape=n_episodes)
+    # list_of_q_tables = np.empty(shape=env.state_size())
     for rep in range(n_reps):
         reward_per_episode = np.empty(0)
         agent = QLearningAgent(n_actions, actions, n_states, epsilon, alpha)
@@ -54,7 +55,10 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
             reward_per_episode = np.append(reward_per_episode, total_reward)
             env.reset()
         all_cumulative_rewards = np.vstack((all_cumulative_rewards, reward_per_episode))
-    return np.mean(all_cumulative_rewards, axis=0)
+        states_q_table = np.mean(agent.q_table, axis=1)
+        # list_of_q_tables = np.vstack((list_of_q_tables, states_q_table))
+    # return np.mean(all_cumulative_rewards, axis=0), np.mean(list_of_q_tables, axis=0)
+    return np.mean(all_cumulative_rewards, axis=0), states_q_table
 
 
 def sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
@@ -124,9 +128,12 @@ def run_experiments():
 
     """
     episodes = 30
-    all_cumulative_rewards = run_episodes(agent_type='q_learning', n_episodes=episodes)
+    all_cumulative_rewards, q_grid = run_episodes(agent_type='q_learning', n_episodes=episodes)
+    print(np.shape(q_grid))
     # all_cumulative_rewards = run_episodes(agent_type='sarsa', n_episodes=episodes)
     print(all_cumulative_rewards)
+    q_grid_plot = MatrixPlot()
+    q_grid_plot.plot(q_grid)
     make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
     # run_episodes(agent_type='sarsa')
 

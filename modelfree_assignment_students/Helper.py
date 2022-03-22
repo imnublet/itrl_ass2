@@ -69,6 +69,34 @@ def smooth(y, window, poly=1):
     return savgol_filter(y,window,poly)
 
 
+class MatrixPlot:
+
+    def __init__(self, title=None, env_size=12*12):
+        self.fig, self.ax = plt.subplots()
+        self.grid_size = env_size
+        self.x = int(env_size**0.5)
+        self.y = int(env_size**0.5)
+        if title is not None:
+            self.ax.set_title(title)
+
+    def plot(self, q_table):
+        print('x=', self.x)
+        print('y=', self.y)
+        grid = np.reshape(q_table, (self.x, self.y))
+        print('grid=',grid)
+        state = 0
+        for i in range(self.x):
+            for j in range(self.y):
+                self.ax.text(i, j, str(round(grid[i, j], 1)), va='center', ha='center', size=10)
+                state += 1
+        print(np.shape(grid))
+        self.ax.matshow(grid, cmap=plt.cm.Blues)
+        self.ax.axes.xaxis.set_visible(False)
+        self.ax.axes.yaxis.set_visible(False)
+        self.fig.savefig('q_grid.png')
+        # self.fig
+
+
 if __name__ == '__main__':
     # Test Learning curve plot
     x = np.arange(100)
