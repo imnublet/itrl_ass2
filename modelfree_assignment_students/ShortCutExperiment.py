@@ -1,4 +1,7 @@
+from http.client import NOT_ACCEPTABLE
 from unicodedata import name
+
+from matplotlib.pyplot import title
 from ShortCutEnvironment import *
 from ShortCutAgents import *
 import numpy as np
@@ -17,19 +20,20 @@ def run_episodes(agent_type='q_learning', n_episodes=30, n_reps=100, alpha=0.1, 
     :param alpha:
     :param epsilon:
     """
-    # env, n_actions, n_states, actions = load_env()
+    env, n_actions, n_states, actions = load_env()
 
     if agent_type == 'q_learning':
-        # return q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
-        return q_learning(n_episodes, n_reps, epsilon, alpha)
+        return q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
+        # return q_learning(n_episodes, n_reps, epsilon, alpha)
     elif agent_type == 'sarsa':
-        return sarsa(n_episodes, n_reps, epsilon, alpha)
+        return sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
+        # return sarsa(n_episodes, n_reps, epsilon, alpha)
     elif agent_type == "expected_sarsa":
-        return expected_sarsa(n_episodes, n_reps, epsilon, alpha)
+        # return expected_sarsa(n_episodes, n_reps, epsilon, alpha)
+        return expected_sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
 
-
-# def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
-def q_learning(n_episodes, n_reps, epsilon, alpha):
+# def q_learning(n_episodes, n_reps, epsilon, alpha):
+def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
     Perform Q-Learning on the environment until env.done()
 
@@ -66,7 +70,8 @@ def q_learning(n_episodes, n_reps, epsilon, alpha):
     return np.mean(all_cumulative_rewards, axis=0), states_q_table
 
 
-def sarsa(n_episodes, n_reps, epsilon, alpha):
+# def sarsa(n_episodes, n_reps, epsilon, alpha):
+def sarsa (env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
      Perform SARSA on the environment until env.done()
 
@@ -81,7 +86,7 @@ def sarsa(n_episodes, n_reps, epsilon, alpha):
      """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
-        env, n_actions, n_states, actions = load_env()
+        # env, n_actions, n_states, actions = load_env()
         reward_per_episode = np.empty(0)
         agent = SARSAAgent(n_actions, actions, n_states, epsilon, alpha)
         for episode in range(n_episodes):
@@ -100,7 +105,9 @@ def sarsa(n_episodes, n_reps, epsilon, alpha):
         states_q_table = np.mean(agent.q_table, axis=1)
     return np.mean(all_cumulative_rewards, axis=0), states_q_table
 
-def expected_sarsa(n_episodes, n_reps, epsilon, alpha):
+
+# def expected_sarsa(n_episodes, n_reps, epsilon, alpha):
+def expected_sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
      Perform Expected SARSA on the environment until env.done()
 
@@ -115,7 +122,7 @@ def expected_sarsa(n_episodes, n_reps, epsilon, alpha):
      """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
-        env, n_actions, n_states, actions = load_env()
+        # env, n_actions, n_states, actions = load_env()
         reward_per_episode = np.empty(0)
         agent = ExpectedSARSAAgent(n_actions, actions, n_states, epsilon, alpha)
         for episode in range(n_episodes):
@@ -164,6 +171,21 @@ def make_plot(x, y):
     qlearning_plot.add_curve(x, y)
     qlearning_plot.save('q_learning plot.png')
 
+def runWindyShortCutExperiment():
+    env = WindyShortcutEnvironment()
+    n_actions = env.action_size()
+    n_states = env.state_size()
+    actions = env.possible_actions()
+    n_episodes = 10000
+
+    all_cumulative_rewards_q_learning, q_grid_q_learning = q_learning(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
+    windy_q_learning_plot = MatrixPlot(title="Q learning in a WindyShortCut environment")
+    windy_q_learning_plot.plot(q_grid_q_learning,name="Q_matrixplot.png")
+
+    all_cumulative_rewards_sarsa, q_grid_sarsa = sarsa(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
+    windy_sarsa_plot = MatrixPlot(title="Sarsa in a WindyShortCut environment")
+    windy_sarsa_plot.plot(q_grid_sarsa,name="sarsaplot.png")
+
 
 def run_experiments():
     """
@@ -172,16 +194,17 @@ def run_experiments():
     episodes = 1000
     repetitions = 100
     ALPHAS = [0.01,0.1,0.5,0.9]
-    AGENTS = ['expected_sarsa']
-    # AGENTS = ['q_learning','sarsa','expected_sarsa']
+    # AGENTS = ['expected_sarsa']
+    AGENTS = ['q_learning','sarsa','expected_sarsa']
     x = np.arange(episodes)
 
     for AGENT in AGENTS:
         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
+        q_plot = MatrixPlot()
         for ALPHA in ALPHAS:
             print("Running:", AGENT, ALPHA)
             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA)
-            comparison_plot.add_curve(x,all_cumulative_rewards,label="Alpha: %s" % ALPHA)
+            comparison_plot.add_curve(x,y=smooth(all_cumulative_rewards,32),label="Alpha: %s" % ALPHA)
         comparison_plot.save(name="Test_for_%s.png" % AGENT)
             
     
@@ -194,4 +217,5 @@ def run_experiments():
     # run_episodes(agent_type='sarsa')
 
 
-run_experiments()
+# run_experiments()
+runWindyShortCutExperiment()
