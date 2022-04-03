@@ -55,6 +55,7 @@ class ExpectedSARSAAgent(object):
         self.alpha = alpha
         self.q_table = np.zeros(shape=(self.n_states, self.n_actions))
 
+
     def select_action(self, state):
         if np.random.random() < self.epsilon:
             a = np.random.choice(self.actions, size=1)[0]

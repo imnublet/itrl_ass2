@@ -42,7 +42,7 @@ class ComparisonPlot:
     def __init__(self,title=None):
         self.fig,self.ax = plt.subplots()
         self.ax.set_xlabel('Parameter (exploration)')
-        self.ax.set_ylabel('Average reward')
+        self.ax.set_ylabel('Average cumulative reward')
         self.ax.set_xscale('log')
         if title is not None:
             self.ax.set_title(title)
@@ -79,6 +79,7 @@ class MatrixPlot:
         if title is not None:
             self.ax.set_title(title)
 
+            
     def action_to_string(self, action):
         if action == 0:
             return 'v'
@@ -89,10 +90,10 @@ class MatrixPlot:
         elif action == 3:
             return '>'
 
-    def plot(self, q_table):
+    def plot(self, q_table, name="Q.png"):
         grid = np.reshape(np.argmax(q_table, axis=1), (self.x, self.y))
         max_q_table = np.reshape(np.max(q_table, axis=1), (self.x, self.y))
-        print(np.shape(max_q_table))
+
         for i in range(self.x):
             for j in range(self.y):
                 pos = max_q_table[i, j]
@@ -103,7 +104,7 @@ class MatrixPlot:
         self.ax.matshow(grid, cmap=plt.cm.Blues)
         self.ax.axes.xaxis.set_visible(False)
         self.ax.axes.yaxis.set_visible(False)
-        self.fig.savefig('q_grid.png')
+        self.fig.savefig(name)
 
 
 if __name__ == '__main__':
