@@ -11,12 +11,12 @@ from Helper import *
 def run_episodes(agent_type='q_learning', n_episodes=30, n_reps=50, alpha=0.1, epsilon=0.1, type_env='shortcut'):
     """
     Perform an experiment using a given RL algorithm for n_episodes for n_reps
-    :param type_env:
-    :param agent_type:
-    :param n_episodes:
-    :param n_reps:
-    :param alpha:
-    :param epsilon:
+    :param type_env: Environment type: regular shortcut or windy
+    :param agent_type: Type of agent: q_learning, sarsa or expected_sarsa
+    :param n_episodes: number of episodes per run
+    :param n_reps: number of repetitions for the experiment
+    :param alpha: the learning rate for the agent, how much do new values influence the existing q-values?
+    :param epsilon: greediness of the agent, how likely is the agent to opt for the maximum value?
     """
     env, n_actions, n_states, actions = load_env(type_env)
 
@@ -34,14 +34,14 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
     """
     Perform Q-Learning on the environment until env.done()
 
-    :param env:
-    :param n_actions:
-    :param n_states:
-    :param actions:
-    :param n_episodes:
-    :param n_reps:
-    :param epsilon:
-    :param alpha:
+    :param env: Environment type: regular shortcut or windy
+    :param n_actions: the number of actions the agent can choose from
+    :param n_states: the number of states the agent can end up in
+    :param actions: the actions the agent can choose from
+    :param n_episodes: number of episodes per run
+    :param n_reps: number of repetitions for the experiment
+    :param epsilon: greediness of the agent, how likely is the agent to opt for the maximum value?
+    :param alpha: the learning rate for the agent, how much do new values influence the existing q-values?
     """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
@@ -67,17 +67,17 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
 # def sarsa(n_episodes, n_reps, epsilon, alpha):
 def sarsa (env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
-     Perform SARSA on the environment until env.done()
+    Perform SARSA on the environment until env.done()
 
-     :param env:
-     :param n_actions:
-     :param n_states:
-     :param actions:
-     :param n_episodes:
-     :param n_reps:
-     :param epsilon:
-     :param alpha:
-     """
+    :param env: Environment type: regular shortcut or windy
+    :param n_actions: the number of actions the agent can choose from
+    :param n_states: the number of states the agent can end up in
+    :param actions: the actions the agent can choose from
+    :param n_episodes: number of episodes per run
+    :param n_reps: number of repetitions for the experiment
+    :param epsilon: greediness of the agent, how likely is the agent to opt for the maximum value?
+    :param alpha: the learning rate for the agent, how much do new values influence the existing q-values?
+    """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
         # env, n_actions, n_states, actions = load_env()
@@ -102,16 +102,16 @@ def sarsa (env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha
 
 def expected_sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
-     Perform Expected SARSA on the environment until env.done()
-     :param env:
-     :param n_actions:
-     :param n_states:
-     :param actions:
-     :param n_episodes:
-     :param n_reps:
-     :param epsilon:
-     :param alpha:
-     """
+    Perform Expected SARSA on the environment until env.done()
+    :param env: Environment type: regular shortcut or windy
+    :param n_actions: the number of actions the agent can choose from
+    :param n_states: the number of states the agent can end up in
+    :param actions: the actions the agent can choose from
+    :param n_episodes: number of episodes per run
+    :param n_reps: number of repetitions for the experiment
+    :param epsilon: greediness of the agent, how likely is the agent to opt for the maximum value?
+    :param alpha: the learning rate for the agent, how much do new values influence the existing q-values?
+    """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
         # env, n_actions, n_states, actions = load_env()
@@ -138,10 +138,10 @@ def load_env(type_env='shortcut'):
     """
     Load an environment
 
-    :returns loaded_env:
-    :returns n_actions:
-    :returns n_states:
-    :returns actions:
+    :returns loaded_env: the chose environment, regular shortcut or windy
+    :returns n_actions: the number of actions the agent can choose from
+    :returns n_states: the number of states the agent can end up in
+    :returns actions: the actions the agent can choose from
     """
     if type_env == 'shortcut':
         loaded_env = ShortcutEnvironment()
@@ -159,80 +159,46 @@ def load_env(type_env='shortcut'):
 def make_plot(x, y):
     """
     Make a plot
-    :param x:
-    :param y:
+    :param x: X values for the plot
+    :param y: Y values for the plot
     """
     qlearning_plot = ComparisonPlot(title="Learning rate of Q-Learning algorithm")
     qlearning_plot.add_curve(x, y)
     qlearning_plot.save('q_learning plot.png')
 
-# def runWindyShortCutExperiment():
-# TODO: @Luca dit is allemaal is overbodig, ik heb het allemaal onder runExperiments gestopt.
-#     episodes = 1000
-#     repetitions = 100
-#     ALPHAS = [0.01, 0.1, 0.5, 0.9]
-#     # AGENTS = ['expected_sarsa']
-#     AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
-#     x = np.arange(episodes)
-#     # TODO: Ik heb dit uitgecomment, want ik wist even niet wat ik er mee moest doen.
-#     # env = load_env('windy')
-#     # all_cumulative_rewards_q_learning, q_grid_q_learning = q_learning(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
-#     # windy_q_learning_plot = MatrixPlot(title="Q learning in a WindyShortCut environment")
-#     # windy_q_learning_plot.plot(q_grid_q_learning,name="Q_matrixplot.png")
-#     #
-#     # all_cumulative_rewards_sarsa, q_grid_sarsa = sarsa(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
-#     # windy_sarsa_plot = MatrixPlot(title="Sarsa in a WindyShortCut environment")
-#     # windy_sarsa_plot.plot(q_grid_sarsa,name="sarsaplot.png")
-#
-#     for AGENT in AGENTS:
-#         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
-#         q_plot = MatrixPlot()
-#         for ALPHA in ALPHAS:
-#             print("Running:", AGENT, ALPHA)
-#             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env='windy')
-#             comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards,32),label="Alpha: %s" % ALPHA)
-#         comparison_plot.save(name="Test_for_%s.png" % AGENT)
-#
-#
-#     print(np.shape(q_grid))
-#     # all_cumulative_rewards = run_episodes(agent_type='sarsa', n_episodes=episodes)
-#     print(all_cumulative_rewards)
-#     q_grid_plot = MatrixPlot()
-#     q_grid_plot.plot(q_grid)
-#     make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
-#     # run_episodes(agent_type='sarsa')
-
 
 def run_experiments(env='shortcut'):
     """
+    Run experiments for all agent types and levels of alpha.
+
+    :param env: Environment type: regular shortcut or windy
     """
-    episodes = 100
-    repetitions = 30
-    ALPHAS = [0.01, 0.1, 0.5, 0.9]
-    AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
-    x = np.arange(episodes)
-    if env=='windy':
+    episodes = 1000
+    repetitions = 100
+    if env == "windy":
         ALPHAS = [0.1]
+        AGENTS = ['q_learning', 'sarsa']
+        episodes = 10000
+        repetitions = 1
+    else:
+        ALPHAS = [0.01, 0.1, 0.5, 0.9]
+        AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
+        episodes = 1000
+        repetitions = 100
+    x = np.arange(episodes)
 
     for AGENT in AGENTS:
         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
-        q_plot = MatrixPlot()
+        q_plot = MatrixPlot(title="%s agent in %s environment." % (AGENT, env))
         for ALPHA in ALPHAS:
+            q_plot = MatrixPlot(title="%s agent in %s environment, with alpha = %s." % (AGENT, env, ALPHA))
             print("Running:", AGENT, ALPHA)
             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env=env)
-            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 32), label="Alpha: %s" % ALPHA)
-        comparison_plot.save(name="Test_for_%s.png" % AGENT)
-    
-
-    print(np.shape(q_grid))
-    # all_cumulative_rewards = run_episodes(agent_type='sarsa', n_episodes=episodes)
-    print(all_cumulative_rewards)
-    q_grid_plot = MatrixPlot()
-    q_grid_plot.plot(q_grid)
-    make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
-    # run_episodes(agent_type='sarsa')
+            q_plot.plot(q_grid,name="Matrixplot_for_%s_%s_alpha=%s.png"% (env,AGENT,ALPHA))
+            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 10),label="Alpha: %s" % ALPHA)
+        comparison_plot.save(name="Test_for_%s_%s.png" % (env,AGENT))
 
 
 if __name__ == '__main__':
-    # run_experiments(env='shorcut')
+    run_experiments(env='shortcut')
     run_experiments(env='windy')
