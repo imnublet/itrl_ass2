@@ -211,6 +211,8 @@ def run_experiments(env='shortcut'):
     ALPHAS = [0.01, 0.1, 0.5, 0.9]
     AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
     x = np.arange(episodes)
+    if env=='windy':
+        ALPHAS = [0.1]
 
     for AGENT in AGENTS:
         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
@@ -218,7 +220,7 @@ def run_experiments(env='shortcut'):
         for ALPHA in ALPHAS:
             print("Running:", AGENT, ALPHA)
             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env=env)
-            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 32),label="Alpha: %s" % ALPHA)
+            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 32), label="Alpha: %s" % ALPHA)
         comparison_plot.save(name="Test_for_%s.png" % AGENT)
     
 
@@ -232,5 +234,5 @@ def run_experiments(env='shortcut'):
 
 
 if __name__ == '__main__':
-    run_experiments(env='shorcut')
+    # run_experiments(env='shorcut')
     run_experiments(env='windy')
