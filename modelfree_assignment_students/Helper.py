@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Adapted from:
 Bandit environment
 Practical for course 'Reinforcement Learning',
 Bachelor AI, Leiden University, The Netherlands
