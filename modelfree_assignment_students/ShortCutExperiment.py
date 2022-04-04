@@ -21,7 +21,7 @@ def run_episodes(agent_type='q_learning', n_episodes=30, n_reps=50, alpha=0.1, e
     env, n_actions, n_states, actions = load_env(type_env)
 
     if agent_type == 'q_learning':
-        return q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha
+        return q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
     elif agent_type == 'sarsa':
         return sarsa(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha)
     elif agent_type == "expected_sarsa":
@@ -166,43 +166,44 @@ def make_plot(x, y):
     qlearning_plot.add_curve(x, y)
     qlearning_plot.save('q_learning plot.png')
 
-def runWindyShortCutExperiment():
-    episodes = 1000
-    repetitions = 100
-    ALPHAS = [0.01, 0.1, 0.5, 0.9]
-    # AGENTS = ['expected_sarsa']
-    AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
-    x = np.arange(episodes)
-    # TODO: Ik heb dit uitgecomment, want ik wist even niet wat ik er mee moest doen.
-    # env = load_env('windy')
-    # all_cumulative_rewards_q_learning, q_grid_q_learning = q_learning(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
-    # windy_q_learning_plot = MatrixPlot(title="Q learning in a WindyShortCut environment")
-    # windy_q_learning_plot.plot(q_grid_q_learning,name="Q_matrixplot.png")
-    #
-    # all_cumulative_rewards_sarsa, q_grid_sarsa = sarsa(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
-    # windy_sarsa_plot = MatrixPlot(title="Sarsa in a WindyShortCut environment")
-    # windy_sarsa_plot.plot(q_grid_sarsa,name="sarsaplot.png")
+# def runWindyShortCutExperiment():
+# TODO: @Luca dit is allemaal is overbodig, ik heb het allemaal onder runExperiments gestopt.
+#     episodes = 1000
+#     repetitions = 100
+#     ALPHAS = [0.01, 0.1, 0.5, 0.9]
+#     # AGENTS = ['expected_sarsa']
+#     AGENTS = ['q_learning', 'sarsa', 'expected_sarsa']
+#     x = np.arange(episodes)
+#     # TODO: Ik heb dit uitgecomment, want ik wist even niet wat ik er mee moest doen.
+#     # env = load_env('windy')
+#     # all_cumulative_rewards_q_learning, q_grid_q_learning = q_learning(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
+#     # windy_q_learning_plot = MatrixPlot(title="Q learning in a WindyShortCut environment")
+#     # windy_q_learning_plot.plot(q_grid_q_learning,name="Q_matrixplot.png")
+#     #
+#     # all_cumulative_rewards_sarsa, q_grid_sarsa = sarsa(env, n_actions, n_states, actions, n_episodes, n_reps=1, epsilon=0.1, alpha=0.1)
+#     # windy_sarsa_plot = MatrixPlot(title="Sarsa in a WindyShortCut environment")
+#     # windy_sarsa_plot.plot(q_grid_sarsa,name="sarsaplot.png")
+#
+#     for AGENT in AGENTS:
+#         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
+#         q_plot = MatrixPlot()
+#         for ALPHA in ALPHAS:
+#             print("Running:", AGENT, ALPHA)
+#             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env='windy')
+#             comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards,32),label="Alpha: %s" % ALPHA)
+#         comparison_plot.save(name="Test_for_%s.png" % AGENT)
+#
+#
+#     print(np.shape(q_grid))
+#     # all_cumulative_rewards = run_episodes(agent_type='sarsa', n_episodes=episodes)
+#     print(all_cumulative_rewards)
+#     q_grid_plot = MatrixPlot()
+#     q_grid_plot.plot(q_grid)
+#     make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
+#     # run_episodes(agent_type='sarsa')
 
-    for AGENT in AGENTS:
-        comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
-        q_plot = MatrixPlot()
-        for ALPHA in ALPHAS:
-            print("Running:", AGENT, ALPHA)
-            all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env='windy')
-            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards,32),label="Alpha: %s" % ALPHA)
-        comparison_plot.save(name="Test_for_%s.png" % AGENT)
 
-
-    print(np.shape(q_grid))
-    # all_cumulative_rewards = run_episodes(agent_type='sarsa', n_episodes=episodes)
-    print(all_cumulative_rewards)
-    q_grid_plot = MatrixPlot()
-    q_grid_plot.plot(q_grid)
-    make_plot(x=np.arange(episodes), y=all_cumulative_rewards)
-    # run_episodes(agent_type='sarsa')
-
-
-def run_experiments():
+def run_experiments(env='shortcut'):
     """
     """
     episodes = 100
@@ -216,7 +217,7 @@ def run_experiments():
         q_plot = MatrixPlot()
         for ALPHA in ALPHAS:
             print("Running:", AGENT, ALPHA)
-            all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env='shortcut')
+            all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env=env)
             comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 32),label="Alpha: %s" % ALPHA)
         comparison_plot.save(name="Test_for_%s.png" % AGENT)
     
@@ -230,5 +231,6 @@ def run_experiments():
     # run_episodes(agent_type='sarsa')
 
 
-run_experiments()
-runWindyShortCutExperiment()
+if __name__ == '__main__':
+    run_experiments(env='shorcut')
+    run_experiments(env='windy')
