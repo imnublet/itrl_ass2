@@ -191,11 +191,11 @@ def run_experiments(env='shortcut'):
         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
         q_plot = MatrixPlot(title="%s agent in %s environment." % (AGENT, env))
         for ALPHA in ALPHAS:
+            q_plot = MatrixPlot(title="%s agent in %s environment, with alpha = %s." % (AGENT, env, ALPHA))
             print("Running:", AGENT, ALPHA)
             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env=env)
-            if ALPHA == 0.1:
-                q_plot.plot(q_grid,name="Matrixplot_for_%s_%s.png"% (env,AGENT))
-            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 32),label="Alpha: %s" % ALPHA)
+            q_plot.plot(q_grid,name="Matrixplot_for_%s_%s_alpha=%s.png"% (env,AGENT,ALPHA))
+            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 10),label="Alpha: %s" % ALPHA)
         comparison_plot.save(name="Test_for_%s_%s.png" % (env,AGENT))
 
 
