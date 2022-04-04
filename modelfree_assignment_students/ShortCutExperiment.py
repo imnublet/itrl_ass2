@@ -1,10 +1,9 @@
-from http.client import NOT_ACCEPTABLE
 from unicodedata import name
-
 from matplotlib.pyplot import title
 from ShortCutEnvironment import *
 from ShortCutAgents import *
 import numpy as np
+import argparse
 from Helper import *
 
 
@@ -45,7 +44,6 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
     """
     all_cumulative_rewards = np.empty(shape=n_episodes)
     for rep in range(n_reps):
-        env, n_actions, n_states, actions = load_env()
         reward_per_episode = np.empty(0)
         agent = QLearningAgent(n_actions, actions, n_states, epsilon, alpha)
         for episode in range(n_episodes):
@@ -64,7 +62,6 @@ def q_learning(env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, a
     return np.mean(all_cumulative_rewards, axis=0), q_table
 
 
-# def sarsa(n_episodes, n_reps, epsilon, alpha):
 def sarsa (env, n_actions, n_states, actions, n_episodes, n_reps, epsilon, alpha):
     """
     Perform SARSA on the environment until env.done()
@@ -189,16 +186,29 @@ def run_experiments(env='shortcut'):
 
     for AGENT in AGENTS:
         comparison_plot = ComparisonPlot(title="Agent: %s" % AGENT)
-        q_plot = MatrixPlot(title="%s agent in %s environment." % (AGENT, env))
         for ALPHA in ALPHAS:
             q_plot = MatrixPlot(title="%s agent in %s environment, with alpha = %s." % (AGENT, env, ALPHA))
             print("Running:", AGENT, ALPHA)
             all_cumulative_rewards, q_grid = run_episodes(agent_type=AGENT, n_episodes=episodes, n_reps=repetitions, alpha=ALPHA, type_env=env)
-            q_plot.plot(q_grid,name="Matrixplot_for_%s_%s_alpha=%s.png"% (env,AGENT,ALPHA))
-            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 10),label="Alpha: %s" % ALPHA)
-        comparison_plot.save(name="Test_for_%s_%s.png" % (env,AGENT))
+            q_plot.plot(q_grid,name="Matrixplot_for_%s_%s_alpha=%s.png" % (env, AGENT, ALPHA))
+            comparison_plot.add_curve(x, y=smooth(all_cumulative_rewards, 10), label="Alpha: %s" % ALPHA)
+        comparison_plot.save(name="Test_for_%s_%s.png" % (env , AGENT))
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Run three model free reinforcement algorithms')
+    parser.add_argument('--env', type=int,
+                        help='An optional argument to select which environment you want to run.,'
+                             '0 = both environments,'
+                             '1 = shortcut environment,'
+                             '2 = windy environment')
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == '__main__':
-    run_experiments(env='shortcut')
-    run_experiments(env='windy')
+    env_args = parse_args().env
+    if env_args is None or env_args == 1:
+        run_experiments(env='shortcut')
+    elif env_args is None or env_args == 2:
+        run_experiments(env='windy')
