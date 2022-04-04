@@ -101,7 +101,7 @@ class MatrixPlot:
                     self.ax.text(i, j, self.action_to_string(grid[i, j]), va='center', ha='center', size=10)
                 else:
                     self.ax.text(i, j, ' ', va='center', ha='center', size=10)
-        self.ax.matshow(grid, cmap=plt.cm.Blues)
+        self.ax.matshow(max_q_table, cmap=plt.cm.Blues)
         self.ax.axes.xaxis.set_visible(False)
         self.ax.axes.yaxis.set_visible(False)
         self.fig.savefig(name)
